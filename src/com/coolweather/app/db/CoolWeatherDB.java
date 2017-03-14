@@ -3,14 +3,14 @@ package com.coolweather.app.db;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.coolweather.app.model.City;
-import com.coolweather.app.model.Country;
-import com.coolweather.app.model.Province;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+
+import com.coolweather.app.model.City;
+import com.coolweather.app.model.Country;
+import com.coolweather.app.model.Province;
 
 public class CoolWeatherDB {
 	/**
@@ -85,9 +85,10 @@ public class CoolWeatherDB {
 				province.setId(cursor.getInt(cursor.getColumnIndex("id")));
 				province.setProvinceName(cursor.getString(cursor
 						.getColumnIndex("province_name")));
+
 				province.setProvinceCode(cursor.getString(cursor
 						.getColumnIndex("province_code")));
-
+				list.add(province);
 			} while (cursor.moveToNext());
 
 		}
@@ -105,7 +106,7 @@ public class CoolWeatherDB {
 	 * 
 	 * @param city
 	 */
-	private void saveCity(City city) {
+	public void saveCity(City city) {
 
 		if (city != null) {
 			ContentValues values = new ContentValues();
@@ -190,6 +191,7 @@ public class CoolWeatherDB {
 						.getColumnIndex("country_code")));
 				country.setCityId(cursor.getInt(cursor
 						.getColumnIndex("city_id")));
+				list.add(country);
 
 			} while (cursor.moveToNext());
 
