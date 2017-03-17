@@ -6,13 +6,16 @@ import com.coolweather.app.util.HttpUtil;
 import com.coolweather.app.util.Utility;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -44,6 +47,14 @@ public class WeatherActivity extends Activity {
 	 * 用于显示当前日期
 	 */
 	private TextView currentDateText;
+	/**
+	 * 切换城市按钮
+	 */
+	private Button switchCity;
+	/**
+	 * 更新天气按钮
+	 */
+	private Button refreshWeather;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +74,37 @@ public class WeatherActivity extends Activity {
 		temp1Text = (TextView) findViewById(R.id.temp1);
 		temp2Text = (TextView) findViewById(R.id.temp2);
 		currentDateText = (TextView) findViewById(R.id.current_date);
+		switchCity = (Button) findViewById(R.id.switch_city);
+		refreshWeather = (Button) findViewById(R.id.refresh_weather);
 		String countyCode = getIntent().getStringExtra("county_code");
+
+		switchCity.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				Intent intent = new Intent(WeatherActivity.this,
+						ChooseAreaActivity.class);
+				intent.putExtra("from_weather_city", true);
+				startActivity(intent);
+				finish();
+			}
+		});
+
+		refreshWeather.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+
+				publishText.setText("同步中。。。。。");
+				SharedPreferences prefs = PreferenceManager
+						.getDefaultSharedPreferences(WeatherActivity.this);
+				String weatherCode = prefs.getString("weather_code", "");
+				if (!TextUtils.isEmpty(weatherCode)) {
+					queryWeatherInfo(weatherCode);
+				}
+			}
+		});
+
 		if (!TextUtils.isEmpty(countyCode)) {
 			// 有县级代号的时候就去查询天气
 			publishText.setText("同步中。。。");
